@@ -177,6 +177,10 @@ MESSAGE
     I18n.t("#{options[:resource_name]}.#{kind}", options)
   end
 
+  def clear_reset_password_token(object)
+    object.clear_reset_password_token! if object.respond_to?(:clear_reset_password_token!)
+  end
+
   def clean_up_passwords(object)
     object.clean_up_passwords if object.respond_to?(:clean_up_passwords)
   end

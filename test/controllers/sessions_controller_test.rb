@@ -41,6 +41,21 @@ class SessionsControllerTest < ActionController::TestCase
     assert_equal 'foo.bar', request.session["user_return_to"]
   end
 
+  test "#create purges the reset_password_token" do
+    request.env["devise.mapping"] = Devise.mappings[:user]
+
+    user = create_user
+    user.confirm!
+    user.send_reset_password_instructions
+
+    post :create, :format => 'json', :user => {
+      :email => user.email,
+      :password => user.password
+    }
+
+    assert_nil user.reload.reset_password_token
+  end
+
   test "#create doesn't raise exception after Warden authentication fails when TestHelpers included" do
     request.env["devise.mapping"] = Devise.mappings[:user]
     post :create, :user => {

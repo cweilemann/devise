@@ -72,6 +72,15 @@ module Devise
         reset_password_sent_at && reset_password_sent_at.utc >= self.class.reset_password_within.ago
       end
 
+      # Removes reset_password token and persists the record
+      def clear_reset_password_token!
+        if self.reset_password_token.present? || self.reset_password_sent_at.present?
+          clear_reset_password_token
+
+          save
+        end
+      end
+
       protected
 
         def should_generate_reset_token?
